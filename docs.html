@@ -92,7 +92,7 @@
         });
 
         lang = $lib.url.searchParams.has("l") ? $lib.url.searchParams.get("l") : localStorage.getItem("lang");
-        let offline = window.location.href.indexOf("localhost") == -1;
+        let offline = window.location.href.indexOf("localhost") != -1;
         let repo = $lib.get("r", "docs");
         let ver = $lib.get("v", "master");
         let path = lang + "/" + $lib.get("p", "index") + ".md";
