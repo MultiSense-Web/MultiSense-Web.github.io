@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="./assets/docs.css">
+
+    <script src="https://storyanvil.github.io/lib/remarkable.min.js"></script>
+    <script src="./lib/docs.js"></script>
+
+
+    <script src="https://storyanvil.github.io/lib/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/json.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/xml.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/yaml.min.js"></script>
+
+    <title>USNTP</title>
+</head>
+
+<body>
+    <div id="bars">
+        <div class="top" id="top"
+            style="display: flex; flex-direction: row; justify-content: space-between; border-bottom: 1px solid gray;">
+            <button class="inv" onclick="window.location = './docs.html'">
+                USNTP
+            </button>
+
+            <div id="langkey" onclick="setLang();">
+
+            </div>
+        </div>
+    </div>
+    <div id="content" class="sec" style="min-height: 100vh;">
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+            Loading docs...
+        </div>
+    </div>
+    <script>
+        let lang;
+
+        if (localStorage.getItem('lang') == undefined) {
+            localStorage.setItem('lang', "en");
+        }
+
+        function addBar(html, bgcolor, color) {
+            document.getElementById("bars").innerHTML = `
+            <div class="top" style="text-align: center; padding: 5px; background: ${bgcolor}; color: ${color};">${html}</div>
+            ` + document.getElementById("bars").innerHTML;
+        }
+
+        function setLang() {
+            if (localStorage.getItem("lang") == "en") {
+                localStorage.setItem('lang', 'ru');
+                window.location.reload();
+            } else {
+                localStorage.setItem('lang', 'en');
+                window.location.reload();
+            }
+        }
+
+        let md = new Remarkable({
+            html: true,
+            xhtmlOut: false,
+            breaks: false,
+            langPrefix: 'language-',
+            typographer: false,
+            quotes: '“”‘’',
+            highlight: function (str, lang) {
+                if (lang && hljs.getLanguage(lang)) {
+                    try {
+                        return hljs.highlight(lang, str).value;
+                    } catch (err) { }
+                }
+
+                try {
+                    return hljs.highlightAuto(str).value;
+                } catch (err) { }
+
+                return "";
+            },
+        });
+
+        lang = $lib.url.searchParams.has("l") ? $lib.url.searchParams.get("l") : localStorage.getItem("lang");
+        let offline = window.location.href.indexOf("localhost") == -1;
+        let repo = $lib.get("r", "docs");
+        let ver = $lib.get("v", "master");
+        let path = lang + "/" + $lib.get("p", "index") + ".md";
+        let link = offline ? `http://localhost:5555/${path}` : `https://raw.githubusercontent.com/USNTP/${repo}/${ver}/${path}`;
+        document.getElementById("langkey").innerHTML = lang;
+
+        // Bars
+        if ($lib.url.searchParams.has("rr") && lang != localStorage.getItem("lang")) {
+            addBar("ℹ️ This page doesn't support your language", "rgb(241, 113, 113)", "rgb(129, 2, 2)");
+        }
+        if (offline) {
+            addBar("📦 Running in offline mode. [Port: 5555]", "rgb(255, 239, 196)", "rgb(135, 102, 9)");
+        }
+        if (ver != "master") {
+            addBar(`📚 Using non-master version [${ver}]`, "rgb(255, 191, 250)", "rgb(128, 0, 117)");
+        }
+
+        console.log(link);
+
+        load(false);
+
+        function load(skip) {
+            fetch(link, {
+                method: "GET"
+            }).then(e => {
+                if (e.status == 200) {
+                    e.text().then(_e => {
+                        document.getElementById("content").innerHTML = md.render(_e) + `</div><hr><a href="https://github.com/USNTP/docs">USNTP Docs content</a> licensed under <a href="https://github.com/USNTP/docs/blob/master/LICENSE.md">CC BY 4.0</a>`;
+                    }).catch(e => {
+                        document.getElementById("content").innerHTML = `<div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                    Failed to parse packet. [${e}]
+                </div><hr><a href="https://github.com/USNTP/docs">USNTP Docs content</a> licensed under <a href="https://github.com/USNTP/docs/blob/master/LICENSE.md">CC BY 4.0</a>`;
+                    })
+                } else if (e.status == 404) {
+                    path = "en/" + $lib.get("p", "404") + ".md";
+                    link = offline ? `http://localhost:5555/${path}` : `https://raw.githubusercontent.com/USNTP/${repo}/${ver}/${path}`;
+                    fetch(link, {
+                        method: "GET"
+                    }).then(e => {
+                        if (e.status == 200) {
+                            const u = new URL(window.location);
+                            u.searchParams.set("l", "en");
+                            u.searchParams.set("rr", lang);
+                            window.location = u;
+                        }
+                    })
+                }
+            }).catch(e => {
+                document.getElementById("content").innerHTML = `<div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                Failed to load. [${e}]
+            </div><hr><a href="https://github.com/USNTP/docs">USNTP Docs content</a> licensed under <a href="https://github.com/USNTP/docs/blob/master/LICENSE.md">CC BY 4.0</a>`;
+            })
+        }
+        document.getElementById("content").innerHTML += `<hr>
+        <a href="https://github.com/USNTP/docs">USNTP Docs content</a> licensed under <a
+            href="https://github.com/USNTP/docs/blob/master/LICENSE.md">CC BY 4.0</a>`;
+    </script>
+</body>
+
+</html>
