@@ -6,12 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <link rel="stylesheet" href="./assets/docs.css">
+    <link rel="stylesheet" href="./lib/highlight.min.css">
 
-    <script src="https://storyanvil.github.io/lib/remarkable.min.js"></script>
+    <script src="./lib/remarkable.min.js"></script>
     <script src="./lib/docs.js"></script>
+    <script src="./lib/jquery-3.7.1.min.js"></script>
 
 
-    <script src="https://storyanvil.github.io/lib/highlight.min.js"></script>
+    <script src="./lib/highlight.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/json.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/xml.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/yaml.min.js"></script>
@@ -38,6 +40,13 @@
         </div>
     </div>
     <script>
+        const $to = (page) => {
+            let link = new URL($lib.url.origin + $lib.url.pathname);
+            if (repo != "docs") { link.searchParams.set("r", repo) }
+            if (ver != "master") { link.searchParams.set("v", ver) }
+            link.searchParams.set("p", page)
+            window.location = link;
+        }
         let lang;
 
         if (localStorage.getItem('lang') == undefined) {
@@ -88,7 +97,7 @@
         let ver = $lib.get("v", "master");
         let path = lang + "/" + $lib.get("p", "index") + ".md";
         let link = offline ? `http://localhost:5555/${path}` : `https://raw.githubusercontent.com/USNTP/${repo}/${ver}/${path}`;
-        document.getElementById("langkey").innerHTML = lang;
+        document.getElementById("langkey").innerHTML = localStorage.getItem("lang");
 
         // Bars
         if ($lib.url.searchParams.has("rr") && lang != localStorage.getItem("lang")) {

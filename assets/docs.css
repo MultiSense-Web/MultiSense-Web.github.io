@@ -25,3 +25,22 @@ body {
     padding-inline: 15px;
     width: 100%;
 }
+pre {
+    color: #adbac7;
+    background: #22272e;
+    padding: 15px;
+    font-family: "JetBrains Mono", monospace;
+}
+a {
+    color: rgb(99, 99, 255);
+}
+code {
+    font-family: "JetBrains Mono", monospace;
+    background: #22272e;
+    color: #adbac7;
+    padding: 5px;
+    border-radius: 5px;
+}
+pre code {
+    background: none;
+}
