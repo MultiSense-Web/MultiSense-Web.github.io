@@ -18,7 +18,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/xml.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/yaml.min.js"></script>
 
-    <title>USNTP</title>
+    <title>MSW</title>
 </head>
 
 <body>
@@ -26,7 +26,7 @@
         <div class="top" id="top"
             style="display: flex; flex-direction: row; justify-content: space-between; border-bottom: 1px solid gray;">
             <button class="inv" onclick="window.location = './docs.html'">
-                USNTP
+                MultiSense Web
             </button>
 
             <div id="langkey" onclick="setLang();">
@@ -74,7 +74,7 @@
             xhtmlOut: false,
             breaks: false,
             langPrefix: 'language-',
-            typographer: false,
+            typographer: true,
             quotes: '“”‘’',
             highlight: function (str, lang) {
                 if (lang && hljs.getLanguage(lang)) {
@@ -96,7 +96,7 @@
         let repo = $lib.get("r", "docs");
         let ver = $lib.get("v", "master");
         let path = lang + "/" + $lib.get("p", "index") + ".md";
-        let link = offline ? `http://localhost:5555/${path}` : `https://raw.githubusercontent.com/USNTP/${repo}/${ver}/${path}`;
+        let link = offline ? `http://localhost:5555/${path}` : `https://raw.githubusercontent.com/MultiSense-Web/${repo}/${ver}/${path}`;
         document.getElementById("langkey").innerHTML = localStorage.getItem("lang");
 
         // Bars
@@ -120,15 +120,15 @@
             }).then(e => {
                 if (e.status == 200) {
                     e.text().then(_e => {
-                        document.getElementById("content").innerHTML = md.render(_e) + `</div><hr><a href="https://github.com/USNTP/docs">USNTP Docs content</a> licensed under <a href="https://github.com/USNTP/docs/blob/master/LICENSE.md">CC BY 4.0</a>`;
+                        document.getElementById("content").innerHTML = md.render(_e) + `</div><hr><a href="https://github.com/MultiSense-Web/docs">MultiSense-Web Docs content</a> licensed under <a href="https://github.com/MultiSense-Web/docs/blob/master/LICENSE.md">CC BY 4.0</a>`;
                     }).catch(e => {
                         document.getElementById("content").innerHTML = `<div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
                     Failed to parse packet. [${e}]
-                </div><hr><a href="https://github.com/USNTP/docs">USNTP Docs content</a> licensed under <a href="https://github.com/USNTP/docs/blob/master/LICENSE.md">CC BY 4.0</a>`;
+                </div><hr><a href="https://github.com/MultiSense-Web/docs">MultiSense-Web Docs content</a> licensed under <a href="https://github.com/MultiSense-Web/docs/blob/master/LICENSE.md">CC BY 4.0</a>`;
                     })
                 } else if (e.status == 404) {
                     path = "en/" + $lib.get("p", "404") + ".md";
-                    link = offline ? `http://localhost:5555/${path}` : `https://raw.githubusercontent.com/USNTP/${repo}/${ver}/${path}`;
+                    link = offline ? `http://localhost:5555/${path}` : `https://raw.githubusercontent.com/MultiSense-Web/${repo}/${ver}/${path}`;
                     fetch(link, {
                         method: "GET"
                     }).then(e => {
@@ -143,12 +143,12 @@
             }).catch(e => {
                 document.getElementById("content").innerHTML = `<div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
                 Failed to load. [${e}]
-            </div><hr><a href="https://github.com/USNTP/docs">USNTP Docs content</a> licensed under <a href="https://github.com/USNTP/docs/blob/master/LICENSE.md">CC BY 4.0</a>`;
+            </div><hr><a href="https://github.com/MultiSense-Web/docs">MultiSense-Web docs content</a> licensed under <a href="https://github.com/MultiSense-Web/docs/blob/master/LICENSE.md">CC BY 4.0</a>`;
             })
         }
         document.getElementById("content").innerHTML += `<hr>
-        <a href="https://github.com/USNTP/docs">USNTP Docs content</a> licensed under <a
-            href="https://github.com/USNTP/docs/blob/master/LICENSE.md">CC BY 4.0</a>`;
+        <a href="https://github.com/MultiSense-Web/docs">MultiSense-Web Docs content</a> licensed under <a
+            href="https://github.com/MultiSense-Web/docs/blob/master/LICENSE.md">CC BY 4.0</a>`;
     </script>
 </body>
 
